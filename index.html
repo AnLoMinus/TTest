@@ -1,0 +1,654 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>🚗 TTest (Theory Test) – v0.0.2</title>
+    <meta name="description" content="אתר לימוד תיאוריה לנהיגה (דרגה B) – נושאים, תרגול, טיפים, לו" ז, ורישום
+        לבחינה." />
+    <style>
+        :root {
+            --bg: #0b1020;
+            --panel: #151b2e;
+            --ink: #eaf2ff;
+            --muted: #a9b3c7;
+            --brand: #6cf;
+            --accent: #8ef;
+            --ok: #38b000;
+            --warn: #ffbd33;
+            --bad: #ff4757;
+            --gold: #ffd700;
+            --ring: 0 0 0 3px rgba(102, 204, 255, .25);
+        }
+
+        * {
+            box-sizing: border-box
+        }
+
+        html,
+        body {
+            height: 100%
+        }
+
+        body {
+            margin: 0;
+            font-family: system-ui, -apple-system, Segoe UI, Roboto, Heebo, Arial;
+            background: radial-gradient(1200px 600px at 80% -10%, #1a2350, transparent 60%),
+                radial-gradient(900px 500px at -10% 110%, #13233d, transparent 60%), var(--bg);
+            color: var(--ink);
+        }
+
+        a {
+            color: var(--accent);
+            text-decoration: none
+        }
+
+        a:hover {
+            text-decoration: underline
+        }
+
+        .container {
+            max-width: 1120px;
+            margin-inline: auto;
+            padding: 20px
+        }
+
+        header {
+            position: sticky;
+            top: 0;
+            background: linear-gradient(180deg, rgba(11, 16, 32, .95), rgba(11, 16, 32, .7));
+            backdrop-filter: blur(10px);
+            z-index: 10;
+            border-bottom: 1px solid #26314d
+        }
+
+        nav {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: space-between
+        }
+
+        .nav-left {
+            display: flex;
+            gap: 12px;
+            align-items: center
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: 800
+        }
+
+        .brand-badge {
+            width: 34px;
+            height: 34px;
+            border-radius: 10px;
+            background: linear-gradient(135deg, #00d4ff, #007cf0);
+            box-shadow: 0 8px 30px rgba(0, 124, 240, .35)
+        }
+
+        .tabs {
+            display: flex;
+            gap: 6px;
+            flex-wrap: wrap
+        }
+
+        .tab {
+            padding: 10px 14px;
+            border-radius: 12px;
+            background: transparent;
+            color: var(--ink);
+            border: 1px solid #2b3552;
+            cursor: pointer
+        }
+
+        .tab[aria-current="page"],
+        .tab:hover {
+            background: linear-gradient(180deg, #1b2442, #141b30);
+            box-shadow: 0 6px 18px rgba(140, 200, 255, .08)
+        }
+
+        main {
+            padding: 28px 0;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(12, 1fr);
+            gap: 18px
+        }
+
+        .card {
+            grid-column: span 12;
+            background: linear-gradient(180deg, #161e34, #131a2c);
+            border: 1px solid #26314d;
+            border-radius: 18px;
+            padding: 18px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, .25)
+        }
+
+        @media(min-width:880px) {
+            .span-8 {
+                grid-column: span 8
+            }
+
+            .span-4 {
+                grid-column: span 4
+            }
+        }
+
+        h1 {
+            font-size: clamp(24px, 4vw, 38px);
+            margin: 0 0 10px
+        }
+
+        h2 {
+            font-size: clamp(20px, 3vw, 28px);
+            margin: 12px 0
+        }
+
+        h3 {
+            font-size: clamp(18px, 2.2vw, 22px);
+            margin: 12px 0;
+            color: #d8e6ff
+        }
+
+        p {
+            line-height: 1.7;
+            color: var(--ink)
+        }
+
+        ul {
+            margin: 8px 0 0 0;
+            padding: 0 18px
+        }
+
+        li {
+            margin: 6px 0
+        }
+
+        .kpi {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px
+        }
+
+        .pill {
+            display: inline-flex;
+            gap: 8px;
+            align-items: center;
+            background: #0f152a;
+            border: 1px solid #293659;
+            border-radius: 999px;
+            padding: 8px 12px;
+            color: var(--muted)
+        }
+
+        .mono {
+            font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace
+        }
+
+        .btn {
+            background: linear-gradient(180deg, #2a75ff, #004bd6);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            padding: 10px 14px;
+            cursor: pointer;
+            box-shadow: 0 10px 24px rgba(0, 75, 214, .35)
+        }
+
+        .btn:focus {
+            outline: none;
+            box-shadow: var(--ring)
+        }
+
+        .table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0 10px
+        }
+
+        .table th,
+        .table td {
+            text-align: right;
+            padding: 10px 12px
+        }
+
+        .row {
+            background: #0e1530;
+            border: 1px solid #28355a;
+            border-radius: 12px
+        }
+
+        .row th {
+            color: #a9b3c7;
+            font-weight: 600
+        }
+
+        .muted {
+            color: var(--muted)
+        }
+
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            border: 1px dashed #39507f;
+            padding: 6px 10px;
+            border-radius: 10px;
+            color: #b7c6de
+        }
+
+        .ok {
+            color: var(--ok)
+        }
+
+        .warn {
+            color: var(--warn)
+        }
+
+        .bad {
+            color: var(--bad)
+        }
+
+        footer {
+            border-top: 1px solid #26314d;
+            padding: 22px 0;
+            margin-top: 16px;
+            color: var(--muted)
+        }
+
+        /* quiz */
+        .q {
+            margin: 12px 0;
+            padding: 14px;
+            border: 1px solid #28355a;
+            border-radius: 12px;
+            background: #0e1530
+        }
+
+        .q.correct {
+            border-color: #245e2c;
+            background: rgba(56, 176, 0, .07)
+        }
+
+        .q.wrong {
+            border-color: #7a1e1e;
+            background: rgba(255, 71, 87, .07)
+        }
+
+        .progress {
+            height: 10px;
+            background: #0e1530;
+            border-radius: 16px;
+            border: 1px solid #28355a;
+            overflow: hidden
+        }
+
+        .progress>i {
+            display: block;
+            height: 100%;
+            width: 0;
+            background: linear-gradient(90deg, #00e1ff, #23ffaa)
+        }
+
+        .sr-only {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            white-space: nowrap;
+            border: 0
+        }
+
+        .flex {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            flex-wrap: wrap
+        }
+
+        .chips {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap
+        }
+
+        .chip {
+            padding: 6px 10px;
+            border-radius: 999px;
+            background: #0f1428;
+            border: 1px solid #2a3a5f;
+            color: #b7c6de
+        }
+
+        .stamp {
+            font-weight: 700;
+            color: var(--gold)
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <div class="container">
+            <nav>
+                <div class="nav-left">
+                    <div class="brand"><span class="brand-badge" aria-hidden="true"></span><span>🚗 TTest (Theory Test)
+                            – v0.0.2</span></div>
+                    <div class="tabs" role="tablist" aria-label="ניווט">
+                        <button class="tab" data-target="#home" aria-current="page">🏠 דף הבית</button>
+                        <button class="tab" data-target="#topics">📚 נושאים</button>
+                        <button class="tab" data-target="#quiz">🧠 תרגול</button>
+                        <button class="tab" data-target="#schedule">📅 לו"ז</button>
+                        <button class="tab" data-target="#tips">💡 טיפים</button>
+                        <button class="tab" data-target="#register">📝 רישום</button>
+                    </div>
+                </div>
+                <button class="btn" id="saveProgress" title="שמירת התקדמות">💾 שמור התקדמות</button>
+            </nav>
+        </div>
+    </header>
+
+    <main class="container">
+        <section class="grid" id="home" role="region" aria-labelledby="h-home">
+            <article class="card span-8">
+                <h1 id="h-home">🛑 TTest (Theory Test) – המדריך המלא</h1>
+                <p class="muted">גרסה <b class="mono">v0.0.2</b> • נוצר: <span id="nowStamp" class="stamp">—</span></p>
+                <div class="kpi" style="margin:14px 0">
+                    <span class="pill">📅 תאריך לועזי: <b id="gregDate">—</b></span>
+                    <span class="pill">📅 תאריך עברי: <b id="hebDate">כ׳ בתשרי תשפ״ו</b></span>
+                    <span class="pill">🕒 שעה: <b id="timeNow">—</b></span>
+                    <span class="pill">✍️ מאת: <b>AnLoMinus</b></span>
+                </div>
+                <p>
+                    הקורס מכין למבחן הרשמי של משרד התחבורה (דרגת B): חוקים, תמרורים, בטיחות, מכונאות בסיסית ונהיגה
+                    מונעת. כאן תמצא/י תקציר תכני לימוד,
+                    לו"ז מומלץ, תרגול שאלות, וטיפים למעבר מהיר ובטוח.
+                </p>
+                <div class="chips" aria-label="תגיות">
+                    <span class="chip">#Theory</span>
+                    <span class="chip">#Driving_B</span>
+                    <span class="chip">#Road_Safety</span>
+                    <span class="chip">#StudyPlan</span>
+                </div>
+            </article>
+
+            <aside class="card span-4" aria-labelledby="h-stats">
+                <h3 id="h-stats">🔎 נתונים מהירים</h3>
+                <table class="table" aria-describedby="h-stats">
+                    <tr class="row">
+                        <th>כמות שאלות</th>
+                        <td>30</td>
+                    </tr>
+                    <tr class="row">
+                        <th>זמן בחינה</th>
+                        <td>40 ד׳</td>
+                    </tr>
+                    <tr class="row">
+                        <th>ציון מעבר</th>
+                        <td>≥ 26</td>
+                    </tr>
+                    <tr class="row">
+                        <th>שפות</th>
+                        <td>עברית/אנגלית/ערבית/רוסית…</td>
+                    </tr>
+                    <tr class="row">
+                        <th>עלות</th>
+                        <td>≈ ‎63₪</td>
+                    </tr>
+                </table>
+                <p class="muted">📌 טיפ זהב: תרגל/י סימולציות מלאות עם סטופר.</p>
+            </aside>
+        </section>
+
+        <section class="grid" id="topics" role="region" aria-labelledby="h-topics" hidden>
+            <article class="card span-8">
+                <h2 id="h-topics">📚 נושאי הלימוד</h2>
+                <h3>1) 🛑 חוקי תנועה</h3>
+                <ul>
+                    <li>זכות קדימה, עקיפה, עצירה וחניה</li>
+                    <li>מהירויות מותרות: עירוני/בין-עירוני/מהיר</li>
+                    <li>צמתים ורמזורים – תרשימי החלטה</li>
+                </ul>
+                <h3>2) 🚸 תמרורים וסימני דרך</h3>
+                <ul>
+                    <li>אזהרה ⚠️ • חובה ✅ • איסור ⛔ • הכוונה 🧭</li>
+                    <li>סימוני כביש: קווים רציפים/מקווקווים, מעברי חציה</li>
+                </ul>
+                <h3>3) 🧯 בטיחות בדרכים</h3>
+                <ul>
+                    <li>שמירת מרחק, חגורות, הולכי רגל ורוכבים</li>
+                    <li>מזג אוויר: גשם/ערפל/שמש מסנוורת</li>
+                </ul>
+                <h3>4) 🔧 מכונאות בסיסית</h3>
+                <ul>
+                    <li>בדיקות לפני נסיעה: שמן/מים/צמיגים</li>
+                    <li>נורות אזהרה, פנסים, מגבים</li>
+                </ul>
+                <h3>5) 🚨 נהיגה מונעת</h3>
+                <ul>
+                    <li>מניעת תאונות ותגובה למצבי חירום</li>
+                    <li>שימוש נכון במראות, אותות וצופר</li>
+                </ul>
+            </article>
+            <aside class="card span-4">
+                <h3>🎯 מטרות השבוע</h3>
+                <ul>
+                    <li>לפתור 150 שאלות תמרורים</li>
+                    <li>להשלים 3 סימולציות מלאות</li>
+                    <li>לסכם טעויות חוזרות במחברת</li>
+                </ul>
+                <div class="progress" aria-label="התקדמות"><i id="bar" style="width:0%"></i></div>
+                <p class="muted">התקדמות: <b id="pc">0%</b></p>
+            </aside>
+        </section>
+
+        <section class="grid" id="quiz" role="region" aria-labelledby="h-quiz" hidden>
+            <article class="card span-8">
+                <h2 id="h-quiz">🧠 תרגול מהיר</h2>
+                <form id="quizForm">
+                    <div class="q" data-a="b">
+                        <p>1) בקו הפרדה רציף: </p>
+                        <label><input type="radio" name="q1" value="a"> מותר לעקוף בזהירות</label><br>
+                        <label><input type="radio" name="q1" value="b"> אסור לעקוף</label><br>
+                        <label><input type="radio" name="q1" value="c"> מותר לעבור אם אין תמרור</label>
+                    </div>
+                    <div class="q" data-a="a">
+                        <p>2) בתמרור "תן זכות קדימה":</p>
+                        <label><input type="radio" name="q2" value="a"> עליך לאפשר לרכב בדרך החוצה לעבור</label><br>
+                        <label><input type="radio" name="q2" value="b"> יש לעצור תמיד</label><br>
+                        <label><input type="radio" name="q2" value="c"> אין משמעות אם אין תנועה</label>
+                    </div>
+                    <div class="q" data-a="c">
+                        <p>3) מהירות מרבית בדרך עירונית (ללא ציון אחר):</p>
+                        <label><input type="radio" name="q3" value="a"> 70 קמ"ש</label><br>
+                        <label><input type="radio" name="q3" value="b"> 60 קמ"ש</label><br>
+                        <label><input type="radio" name="q3" value="c"> 50 קמ"ש</label>
+                    </div>
+                    <div class="q" data-a="a">
+                        <p>4) כשיורד גשם חזק:</p>
+                        <label><input type="radio" name="q4" value="a"> מאטים, מדליקים אורות, מגדילים מרחק</label><br>
+                        <label><input type="radio" name="q4" value="b"> שומרים על אותה מהירות</label><br>
+                        <label><input type="radio" name="q4" value="c"> עוקפים משאיות מהר</label>
+                    </div>
+                    <div class="q" data-a="b">
+                        <p>5) נורת חום מנוע אדומה נדלקה:</p>
+                        <label><input type="radio" name="q5" value="a"> להמשיך עד הבית</label><br>
+                        <label><input type="radio" name="q5" value="b"> לעצור בבטחה ולבדוק/לזמן סיוע</label><br>
+                        <label><input type="radio" name="q5" value="c"> לכבות מזגן וזה בסדר</label>
+                    </div>
+                    <div class="flex"><button class="btn" type="submit">בדוק תוצאות</button><button class="tab"
+                            type="button" id="resetQuiz">אפס</button></div>
+                </form>
+                <p id="scoreLine" class="muted" aria-live="polite"></p>
+            </article>
+            <aside class="card span-4">
+                <h3>📒 מחברת טעויות</h3>
+                <textarea id="notes" rows="10"
+                    style="width:100%;background:#0b1230;border:1px solid #2a3a5f;border-radius:12px;color:var(--ink);padding:10px"
+                    placeholder="כתוב/י כאן נקודות לשיפור…"></textarea>
+                <div class="flex" style="margin-top:10px"><button class="btn" id="saveNotes">שמור</button><span
+                        id="notesSaved" class="muted" aria-live="polite"></span></div>
+            </aside>
+        </section>
+
+        <section class="grid" id="schedule" role="region" aria-labelledby="h-schedule" hidden>
+            <article class="card span-8">
+                <h2 id="h-schedule">📅 לו"ז לימוד – 4 שבועות</h2>
+                <ol>
+                    <li><b>שבוע 1:</b> חוקי תנועה בסיסיים, צמתים ורמזורים (45–60 ד׳/יום)</li>
+                    <li><b>שבוע 2:</b> תמרורים וסימונים; 150 שאלות תמרורים</li>
+                    <li><b>שבוע 3:</b> בטיחות ומכונאות בסיסית; מזג אוויר, נורות אזהרה</li>
+                    <li><b>שבוע 4:</b> סימולציות מלאות, ניתוח טעויות, הכנה נפשית</li>
+                </ol>
+                <p class="muted">טיפ: סיכום יומי קצר (5 ד׳) מעלה זכירה משמעותית.</p>
+            </article>
+            <aside class="card span-4">
+                <h3>✅ צ׳ק-ליסט</h3>
+                <ul>
+                    <li><input type="checkbox" /> טופס ירוק</li>
+                    <li><input type="checkbox" /> הרשמה למבחן</li>
+                    <li><input type="checkbox" /> 10 סימולציות</li>
+                    <li><input type="checkbox" /> בדיקת מוכנות</li>
+                </ul>
+            </aside>
+        </section>
+
+        <section class="grid" id="tips" role="region" aria-labelledby="h-tips" hidden>
+            <article class="card span-8">
+                <h2 id="h-tips">💡 טיפים זהב</h2>
+                <ul>
+                    <li>שגרה קבועה מנצחת • למידה קצרה אך יומיומית</li>
+                    <li>תרשימי החלטה לזכות קדימה מקצרים זמן חשיבה</li>
+                    <li>תרגל/י בקול רם עם חבר – משפר הטמעה</li>
+                    <li>לפני בחינה: סימולציה אחת, מנוחה טובה, מים</li>
+                </ul>
+            </article>
+            <aside class="card span-4">
+                <h3>🕯️ פסוק השראה</h3>
+                <blockquote style="margin:0">“ונשמרתם מאד לנפשותיכם” (דברים ד׳:ט"ו)</blockquote>
+            </aside>
+        </section>
+
+        <section class="grid" id="register" role="region" aria-labelledby="h-register" hidden>
+            <article class="card span-8">
+                <h2 id="h-register">📝 רישום לבחינה</h2>
+                <p>גיל מינימלי: 16.5 • מזהה בתוקף • טופס ירוק (בדיקת ראייה + בריאות). רישום מקוון באתר הרשמי:</p>
+                <p><a href="https://www.gov.il/he/departments/mot" target="_blank" rel="noopener">משרד התחבורה והבטיחות
+                        בדרכים</a></p>
+                <p class="muted">קרדיטים: תוכן לימודי, מבנה בחינה וטיפים – בהשראת מדריכי לימוד תיאוריה ציבוריים ועמודי
+                    מידע רשמיים.</p>
+            </article>
+            <aside class="card span-4">
+                <h3>🏷️ האשטגים</h3>
+                <div class="chips">
+                    <span class="chip">#DrivingTheory</span>
+                    <span class="chip">#SafeDriving</span>
+                    <span class="chip">#ExamReady</span>
+                    <span class="chip">#Israel</span>
+                </div>
+            </aside>
+        </section>
+    </main>
+
+    <footer>
+        <div class="container flex" style="justify-content:space-between">
+            <div>© <span id="year">2025</span> • TTest (Theory Test) • גרסה <b class="mono">v0.0.2</b></div>
+            <div class="muted">Designed with ❤️ • RTL • נגישות בסיסית</div>
+        </div>
+    </footer>
+
+    <script>
+        // Utilities
+        const $ = (sel, ctx = document) => ctx.querySelector(sel);
+        const $$ = (sel, ctx = document) => Array.from(ctx.querySelectorAll(sel));
+
+        // Tabs
+        $$('.tab').forEach(btn => {
+            if (btn.dataset.target) {
+                btn.addEventListener('click', () => {
+                    $$('.tab').forEach(b => b.removeAttribute('aria-current'));
+                    btn.setAttribute('aria-current', 'page');
+                    const id = btn.dataset.target;
+                    $$('main section').forEach(s => s.hidden = s.id !== id.slice(1));
+                })
+            }
+        });
+
+        // Date & time (Asia/Jerusalem)
+        function fmt(dt, opts) { return new Intl.DateTimeFormat('he-IL', opts).format(dt) }
+        const now = new Date();
+        $('#gregDate').textContent = fmt(now, { year: 'numeric', month: '2-digit', day: '2-digit' });
+        $('#timeNow').textContent = fmt(now, { hour: '2-digit', minute: '2-digit', hour12: false, timeZone: 'Asia/Jerusalem' });
+        $('#nowStamp').textContent = `${fmt(now, { weekday: 'long' })} • ${fmt(now, { day: '2-digit', month: '2-digit', year: 'numeric' })} • ${$('#timeNow').textContent}`;
+        $('#year').textContent = now.getFullYear();
+        // Hebrew date (static for v0.0.1)
+        // הערה: לתאריך 22.10.2025 – כ׳ בתשרי תשפ"ו
+        $('#hebDate').textContent = 'כ׳ בתשרי תשפ״ו';
+
+        // Progress bar based on localStorage counters
+        const PROG_KEY = 'theory.progress';
+        function getProg() { try { return JSON.parse(localStorage.getItem(PROG_KEY)) || { sim: 0, notes: false } } catch { return { sim: 0, notes: false } } }
+        function setProg(p) { localStorage.setItem(PROG_KEY, JSON.stringify(p)) }
+
+        function renderProg() {
+            const p = getProg();
+            const pct = Math.min(100, Math.round((p.sim * 10 + (p.notes ? 10 : 0))));
+            $('#bar').style.width = pct + '%';
+            $('#pc').textContent = pct + '%';
+        }
+
+        // Quiz
+        $('#quizForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            let score = 0; let total = 0;
+            $$('#quizForm .q').forEach(q => {
+                total++;
+                const corr = q.dataset.a;
+                const picked = (new FormData($('#quizForm')).get('q' + total));
+                q.classList.remove('correct', 'wrong');
+                if (picked === corr) { score++; q.classList.add('correct') } else { q.classList.add('wrong') }
+            });
+            $('#scoreLine').textContent = `תוצאה: ${score} / ${total}`;
+            const p = getProg(); p.sim = Math.max(p.sim, score >= 4 ? 5 : 3); setProg(p); renderProg();
+        });
+
+        $('#resetQuiz').addEventListener('click', () => {
+            $$('#quizForm input[type=radio]').forEach(r => r.checked = false);
+            $$('#quizForm .q').forEach(q => q.classList.remove('correct', 'wrong'));
+            $('#scoreLine').textContent = '';
+        });
+
+        // Notes save
+        $('#saveNotes').addEventListener('click', () => {
+            localStorage.setItem('theory.notes', $('#notes').value || '');
+            const p = getProg(); p.notes = !!$('#notes').value.trim(); setProg(p);
+            $('#notesSaved').textContent = 'נשמר ✓';
+            renderProg();
+            setTimeout(() => $('#notesSaved').textContent = '', 1500)
+        });
+        // Load notes
+        $('#notes').value = localStorage.getItem('theory.notes') || '';
+
+        // Save progress button shortcut
+        $('#saveProgress').addEventListener('click', () => {
+            const p = getProg(); setProg(p); renderProg();
+            $('#saveProgress').textContent = '✅ נשמר';
+            setTimeout(() => $('#saveProgress').textContent = '💾 שמור התקדמות', 1500)
+        });
+
+        renderProg();
+    </script>
+</body>
+
+</html>
