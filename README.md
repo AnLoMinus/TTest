@@ -1,6 +1,7 @@
 # 🚗 TTest (Theory Test) - מדריך מקיף להכנה למבחן התיאוריה
 
-## ![[Futuristic Neon Warning Alert.png]]
+
+<img width="1536" height="1024" alt="image" src="Futuristic Neon Warning Alert.png" />
 
 ## 📋 סקירה כללית
 
